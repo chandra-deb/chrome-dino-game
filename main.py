@@ -1,17 +1,23 @@
 import pygame
 pygame.init()
 
+RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (211, 211, 211)
+GREEN = (50,205,50)
+
+FPS = 30
+point = 0
+
 window = pygame.display.set_mode((1200, 600))
 pygame.display.set_caption("Chrome's Boring Dino")
 font = pygame.font.Font('freesansbold.ttf', 32) 
-text = font.render('GeeksForGeeks', True, green, blue) 
+text = font.render(str(point), True, GREEN, WHITE)
 textRect = text.get_rect()  
-textRect.center = (X // 2, Y // 2) 
+textRect.center = (1000, 50) 
 
 
-RED = (255, 0, 0)
-WHITE = (255, 255, 255)
-FPS = 30
+
 
 clock = pygame.time.Clock()
 
@@ -65,18 +71,27 @@ def collide(dino, obstacles):
         if (dino.x_pos + dino.width >= obstacle.x_pos) and (dino.x_pos <= obstacle.x_pos + obstacle.width)\
         and (dino.y_pos >= obstacle.y_pos):
             print("Collision detected")
+            return True
         
 
+game_over = False
 
-dino = Dino(50, 500, 50, 100, 5, (255,0,0))
+
+dino = Dino(50, 500, 50, 100, 5, (GREEN))
 obstacles = []   
 
 
 loop_counter = 0
+point_counter = 0
+
 run = True
 while run:
     clock.tick(FPS)
     loop_counter += 1
+    if point_counter == 5:
+        point += 1
+        point_counter = 0
+    point_counter += 1
 
 
     #event catching
@@ -91,17 +106,24 @@ while run:
         dino.x_pos += dino.speed
     if keys[pygame.K_SPACE]:
         dino.is_jump = True
+         
     dino.jump()
+
 
     
     if loop_counter == 100:
         obstacles.append(Obstacle(1200, 500, 50, 120, 5, RED))
         loop_counter = 0
+        
     
-    collide(dino, obstacles)
+    value = collide(dino, obstacles)
+    if value:
+        run = False
 
 
     window.fill(WHITE)
+    window.blit(text, textRect) 
+
 
     for obstacle in obstacles:        
         obstacle.draw(window)
@@ -110,6 +132,7 @@ while run:
             obstacles.remove(obstacle)
 
     dino.draw(window)
+    text = font.render(str(point), True, GREEN, WHITE) 
     pygame.display.update()
 
 
