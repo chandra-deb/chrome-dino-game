@@ -3,6 +3,11 @@ pygame.init()
 
 window = pygame.display.set_mode((1200, 600))
 pygame.display.set_caption("Chrome's Boring Dino")
+font = pygame.font.Font('freesansbold.ttf', 32) 
+text = font.render('GeeksForGeeks', True, green, blue) 
+textRect = text.get_rect()  
+textRect.center = (X // 2, Y // 2) 
+
 
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -57,24 +62,14 @@ class Obstacle(pygame.sprite.Sprite):
 
 def collide(dino, obstacles):
     for obstacle in obstacles:
-        if dino.x_pos + dino.width >= obstacle.x_pos and dino.:
+        if (dino.x_pos + dino.width >= obstacle.x_pos) and (dino.x_pos <= obstacle.x_pos + obstacle.width)\
+        and (dino.y_pos >= obstacle.y_pos):
             print("Collision detected")
         
-        # if (dino.x_pos > obstacle.x_pos + obstacle.height) and (dino.x_pos < obstacle.x_pos + obstacle.width + obstacle.height) and\
-        #     (dino.y_pos > obstacle.y_pos) and (dino.y_pos < obstacle + obstacle.height):
-        #     print("Collide")
 
-
-        # ######################################
-
-#  def isPointInsideRect(x, y, rect):
-#       if (x > rect.left) and (x < rect.right) and (y > rect.top) and (y < rect.bottom):
-#           return True
-#       else:
-#           return False
 
 dino = Dino(50, 500, 50, 100, 5, (255,0,0))
-obstacles = []
+obstacles = []   
 
 
 loop_counter = 0
