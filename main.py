@@ -122,6 +122,7 @@ level = 1
 o_counter = 150
 random_speed = 5
 game_start = False
+made_high_score = False
 
 intro = True
 while intro:
@@ -162,11 +163,15 @@ while intro:
 
 
                 if int(point) > int(high_score):
-                    cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
-                    window.blit(cong_high_score, cong_high_score_rect)
+                    made_high_score = True
+                    # cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
+                    # window.blit(cong_high_score, cong_high_score_rect)
                     with open('high_score.txt', 'w') as txt_file:
                         txt_file.write(str(point))
                 
+                # if made_high_score:
+                #     cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
+                #     window.blit(cong_high_score, cong_high_score_rect)                   
                 
                 window.blit(ot_score_text, ot_score_text_rect)
 
@@ -207,9 +212,11 @@ while intro:
                 #event catching
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_LEFT]:
-                    dino.x_pos -= dino.speed
+                    if dino.x_pos > 25:
+                        dino.x_pos -= dino.speed
                 if keys[pygame.K_RIGHT]:
-                    dino.x_pos += dino.speed
+                    if dino.x_pos < 1100:
+                        dino.x_pos += dino.speed
                 if keys[pygame.K_SPACE]:
                     dino.is_jump = True
 
