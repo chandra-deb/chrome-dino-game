@@ -82,7 +82,7 @@ class Dino(pygame.sprite.Sprite):
 
     
     def draw(self, window):
-        return pygame.draw.rect(window, self.color, (self.x_pos, self.y_pos, self.width, self.height))
+        return pygame.draw.rect(window, self.color, (int(self.x_pos), int(self.y_pos), self.width, self.height))
 
 
 
