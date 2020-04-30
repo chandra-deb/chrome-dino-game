@@ -37,11 +37,15 @@ cong_high_score = font.render(" ", True, GREEN, WHITE)
 cong_high_score_rect = text.get_rect()  
 cong_high_score_rect.center = (200, 400)
 
-
 intro_font = pygame.font.Font('freesansbold.ttf', 64) 
 intro_text = intro_font.render(" ", True, GREEN, WHITE)
-intro_text_rect = text.get_rect()  
-intro_text_rect.center = (500, 280)
+intro_text_rect = intro_text.get_rect()  
+intro_text_rect.center = (300, 280)
+
+intro_help_font = pygame.font.Font('freesansbold.ttf', 24) 
+intro_help_text = intro_help_font.render(" ", True, GREEN, WHITE)
+intro_help_text_rect = intro_help_text.get_rect()  
+intro_help_text_rect.center = (250, 450)
 
 
 #################try to find data file for high score##if unable to find it will create one
@@ -104,7 +108,6 @@ def collide(dino, obstacles):
     for obstacle in obstacles:
         if (dino.x_pos + dino.width >= obstacle.x_pos) and (dino.x_pos <= obstacle.x_pos + obstacle.width)\
         and (dino.y_pos >= obstacle.y_pos):
-            print("Collision detected")
             return True
         
 
@@ -118,186 +121,202 @@ point_counter = 0
 level = 1
 o_counter = 150
 random_speed = 5
-
+game_start = False
 
 intro = True
-
-
-game_over = False
-run = True
-while run:
-    clock.tick(FPS)
+while intro:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
-    if game_over:
-        window.fill(WHITE)
-        window.blit(text, textRect)  
-        textRect.center = (300, 200)
+            pygame.quit()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            game_start = True
+    intro_text = intro_font.render("Press Space to Play", True, GREEN, WHITE)
+    intro_help_text = intro_help_font.render("Press K_LEFT, K_RIGHT to Move and Press SPACE to jump", True, GREEN, WHITE)
+    window.fill(WHITE)
+    window.blit(intro_text, intro_text_rect)
+    window.blit(intro_help_text, intro_help_text_rect)
+    pygame.display.update()
 
-        text = font.render(":(Game Over :- press Tab to play again", True, RED, WHITE)
-        ot_score_text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
+    if game_start:
 
-        with open('high_score.txt', 'r') as txt_file:
-            high_score = txt_file.read()
+        game_over = False
+        run = True
+        while run:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    intro = False
+
+            if game_over:
+                window.fill(WHITE)
+                window.blit(text, textRect)  
+                textRect.center = (300, 200)
+
+                text = font.render(":(Game Over :- press Tab to play again", True, RED, WHITE)
+                ot_score_text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
+
+                with open('high_score.txt', 'r') as txt_file:
+                    high_score = txt_file.read()
 
 
-        if int(point) > int(high_score):
-            cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
-            with open('high_score.txt', 'w') as txt_file:
-                txt_file.write(str(point))
-        
-        window.blit(cong_high_score, cong_high_score_rect)
-        window.blit(ot_score_text, ot_score_text_rect)
-
-        
-        
+                if int(point) > int(high_score):
+                    cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
+                    window.blit(cong_high_score, cong_high_score_rect)
+                    with open('high_score.txt', 'w') as txt_file:
+                        txt_file.write(str(point))
+                
+                
+                window.blit(ot_score_text, ot_score_text_rect)
 
                 
-        # window.blit(ot_score_text, ot_score_text_rect)
+                
 
-        ks = pygame.key.get_pressed()
-        if ks[pygame.K_TAB]:
-                game_over = False
-                textRect.center = (900, 100) 
-                dino = Dino(50, 500, 50, 100, 5, (GREEN))
-                loop_counter = 0
-                point_counter = 0
-                point = 0
-                obstacles = []
-                level = 1
-                o_counter = 150
-                random_speed = 5
+                        
+                # window.blit(ot_score_text, ot_score_text_rect)
 
-        pygame.display.update()
+                ks = pygame.key.get_pressed()
+                if ks[pygame.K_TAB]:
+                        game_over = False
+                        textRect.center = (900, 100) 
+                        dino = Dino(50, 500, 50, 100, 5, (GREEN))
+                        loop_counter = 0
+                        point_counter = 0
+                        point = 0
+                        obstacles = []
+                        level = 1
+                        o_counter = 150
+                        random_speed = 5
 
+                pygame.display.update()
+
+                    
+
+            if not game_over:
+                loop_counter += 1
+                if point_counter == 5:
+                    point += 1
+                    point_counter = 0
+                point_counter += 1
             
 
-    if not game_over:
-        loop_counter += 1
-        if point_counter == 5:
-            point += 1
-            point_counter = 0
-        point_counter += 1
-    
 
 
 
+                #event catching
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_LEFT]:
+                    dino.x_pos -= dino.speed
+                if keys[pygame.K_RIGHT]:
+                    dino.x_pos += dino.speed
+                if keys[pygame.K_SPACE]:
+                    dino.is_jump = True
 
-        #event catching
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            dino.x_pos -= dino.speed
-        if keys[pygame.K_RIGHT]:
-            dino.x_pos += dino.speed
-        if keys[pygame.K_SPACE]:
-            dino.is_jump = True
+                dino.jump()
 
-        dino.jump()
+                ###########Level Creator############
 
-        ###########Level Creator############
+                if point == 100:
+                    level = 2
+                    loop_counter = 0
+                    o_counter = 100
+                if point == 300:
+                    Level = 3
+                    loop_counter = 0
+                    o_counter = 70
+                if point == 500:
+                    level = 4
+                    loop_counter = 0
+                    o_counter = 50
+                if point == 700:
+                    level = 5
+                    loop_counter = 0
+                    o_counter = 40
+                if point == 850:
+                    level = 6
+                    loop_counter = 0
+                    o_counter = 35
+                if point == 950:
+                    level = 7
+                    loop_counter = 0
+                    o_counter = 30
+                if point == 1200:
+                    level = 8
+                    loop_counter = 0
+                    o_counter = 25
+                if point == 1350:
+                    level = 9
+                    loop_counter = 0
+                    o_counter = 20
+                if point == 1500:
+                    level = 10
+                    loop_counter = 0
+                    o_counter = 15
+                    
 
-        if point == 100:
-            level = 2
-            loop_counter = 0
-            o_counter = 100
-        if point == 300:
-            Level = 3
-            loop_counter = 0
-            o_counter = 70
-        if point == 500:
-            level = 4
-            loop_counter = 0
-            o_counter = 50
-        if point == 700:
-            level = 5
-            loop_counter = 0
-            o_counter = 40
-        if point == 850:
-            level = 6
-            loop_counter = 0
-            o_counter = 35
-        if point == 950:
-            level = 7
-            loop_counter = 0
-            o_counter = 30
-        if point == 1200:
-            level = 8
-            loop_counter = 0
-            o_counter = 25
-        if point == 1350:
-            level = 9
-            loop_counter = 0
-            o_counter = 20
-        if point == 1500:
-            level = 10
-            loop_counter = 0
-            o_counter = 15
+                elif level == 2:
+                    random_speed = random.randint(6, 12)
+                    dino.speed = 6
+                elif level == 3:
+                    random_speed = random.randint(7, 14)
+                    dino.speed = 8
+                elif level == 4:
+                    random_speed = random.randint(8, 16)
+                    dino.speed = 10
+                elif level == 5:
+                    random_speed = random.randint(9, 18)
+                    dino.speed = 12
+                elif level == 6:
+                    random_speed = random.randint(10, 20)
+                    dino.speed = 14
+                elif level == 7:
+                    random_speed = random.randint(11, 22)
+                    dino.speed = 16
+                elif level == 8:
+                    random_speed = random.randint(12, 24)
+                    dino.speed = 17
+                elif level == 9:
+                    random_speed = random.randint(13, 26)
+                    dino.speed = 18
+                elif level == 10:
+                    random_speed = random.randint(15, 30)
+                    dino.speed = 20
+                
+
+
+                
+                if loop_counter == o_counter:
+                    obstacles.append(Obstacle(1200, 500, 50, 120, random_speed, RED))
+                    loop_counter = 0
+
+                ######check if dino collide with obstacles######
+                value = collide(dino, obstacles)
+                if value:
+                    game_over = True
+
+                text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
+                score_text = font.render("LEVEL: " + str(level), True, GREEN, WHITE) 
+                show_high_score = font.render("HIGH SCORE: " + str(high_score), True, GREEN, WHITE)
+
+                window.fill(WHITE)
+                window.blit(show_high_score, show_high_score_rect) 
+                window.blit(score_text, score_text_rect)
+                window.blit(text, textRect)
+                
+                
+
+
+                for obstacle in obstacles:        
+                    obstacle.draw(window)
+                    obstacle.move()
+                    if obstacle.x_pos < -650:
+                        obstacles.remove(obstacle)
+
+                dino.draw(window)
+
+                pygame.display.update()
             
-
-        elif level == 2:
-            random_speed = random.randint(6, 12)
-            dino.speed = 6
-        elif level == 3:
-            random_speed = random.randint(7, 14)
-            dino.speed = 8
-        elif level == 4:
-            random_speed = random.randint(8, 16)
-            dino.speed = 10
-        elif level == 5:
-            random_speed = random.randint(9, 18)
-            dino.speed = 12
-        elif level == 6:
-            random_speed = random.randint(10, 20)
-            dino.speed = 14
-        elif level == 7:
-            random_speed = random.randint(11, 22)
-            dino.speed = 16
-        elif level == 8:
-            random_speed = random.randint(12, 24)
-            dino.speed = 17
-        elif level == 9:
-            random_speed = random.randint(13, 26)
-            dino.speed = 18
-        elif level == 10:
-            random_speed = random.randint(15, 30)
-            dino.speed = 20
-        
-
-
-        
-        if loop_counter == o_counter:
-            obstacles.append(Obstacle(1200, 500, 50, 120, random_speed, RED))
-            print(random_speed)
-            loop_counter = 0
-
-        ######check if dino collide with obstacles######
-        value = collide(dino, obstacles)
-        if value:
-            game_over = True
-
-        text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
-        score_text = font.render("LEVEL: " + str(level), True, GREEN, WHITE) 
-        show_high_score = font.render("HIGH SCORE: " + str(high_score), True, GREEN, WHITE)
-
-        window.fill(WHITE)
-        window.blit(show_high_score, show_high_score_rect) 
-        window.blit(score_text, score_text_rect)
-        window.blit(text, textRect)
-        
-        
-
-
-        for obstacle in obstacles:        
-            obstacle.draw(window)
-            obstacle.move()
-            if obstacle.x_pos < -650:
-                obstacles.remove(obstacle)
-
-        dino.draw(window)
-
-        pygame.display.update()
-    
-    
+            
 
 pygame.quit()
