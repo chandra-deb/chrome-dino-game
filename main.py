@@ -1,5 +1,7 @@
 import pygame
 import random
+import os
+
 pygame.init()
 
 RED = (255, 0, 0)
@@ -9,15 +11,34 @@ GREEN = (50,205,50)
 
 FPS = 30
 point = 0
+high_score = 0
 
 window = pygame.display.set_mode((1200, 600))
 pygame.display.set_caption("Chrome's Boring Dino")
 font = pygame.font.Font('freesansbold.ttf', 32) 
+
 text = font.render(str(point), True, GREEN, WHITE)
 textRect = text.get_rect()  
-textRect.center = (1000, 50) 
+textRect.center = (850, 100) 
 
+score_text = font.render(" ", True, GREEN, WHITE)
+score_text_rect = text.get_rect()  
+score_text_rect.center = (850, 150) 
 
+ot_score_text = font.render(" ", True, GREEN, WHITE)
+ot_score_text_rect = text.get_rect()  
+ot_score_text_rect.center = (500, 400) 
+
+show_high_score = font.render(" ", True, GREEN, WHITE)
+show_high_score_rect = text.get_rect()  
+show_high_score_rect.center = (850, 50)
+
+try:
+    with open('high_score.txt', 'r') as txt_file:
+        high_score = txt_file.read()
+except:
+    with open('high_score.txt', 'w') as txt_file:
+        txt_file.write('0')
 
 
 clock = pygame.time.Clock()
@@ -88,6 +109,7 @@ random_speed = 5
 
 
 
+
 game_over = False
 run = True
 while run:
@@ -98,12 +120,30 @@ while run:
     if game_over:
         window.fill(WHITE)
         window.blit(text, textRect)  
-        textRect.center = (300, 300)
-        text = font.render(":(Game Over :- press enter to play again", True, RED, WHITE)
+        textRect.center = (350, 300)
+
+        text = font.render(":(Game Over :- press Tab to play again", True, RED, WHITE)
+        ot_score_text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
+        window.blit(ot_score_text, ot_score_text_rect)
+
+        with open('high_score.txt', 'r') as txt_file:
+            high_score = txt_file.read()
+
+
+        if int(point) > int(high_score):
+            with open('high_score.txt', 'w') as txt_file:
+                txt_file.write(str(point))
+
+        
+        
+
+                
+        window.blit(ot_score_text, ot_score_text_rect)
+
         ks = pygame.key.get_pressed()
-        if ks[pygame.K_RCTRL]:
+        if ks[pygame.K_TAB]:
                 game_over = False
-                textRect.center = (1000, 50) 
+                textRect.center = (900, 100) 
                 dino = Dino(50, 500, 50, 100, 5, (GREEN))
                 loop_counter = 0
                 point_counter = 0
@@ -215,14 +255,20 @@ while run:
             print(random_speed)
             loop_counter = 0
 
-        
+        ######check if dino collide with obstacles######
         value = collide(dino, obstacles)
         if value:
             game_over = True
 
+        text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
+        score_text = font.render("LEVEL: " + str(level), True, GREEN, WHITE) 
+        show_high_score = font.render("HIGH SCORE: " + str(high_score), True, GREEN, WHITE)
 
         window.fill(WHITE)
-        window.blit(text, textRect) 
+        window.blit(text, textRect)
+        window.blit(score_text, score_text_rect)
+        window.blit(show_high_score, show_high_score_rect) 
+        
 
 
         for obstacle in obstacles:        
@@ -232,7 +278,7 @@ while run:
                 obstacles.remove(obstacle)
 
         dino.draw(window)
-        text = font.render(str(point), True, GREEN, WHITE) 
+
         pygame.display.update()
     
     
