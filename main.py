@@ -1,4 +1,5 @@
 import pygame
+import random
 pygame.init()
 
 RED = (255, 0, 0)
@@ -81,6 +82,9 @@ dino = Dino(50, 500, 50, 100, 5, (GREEN))
 obstacles = []   
 loop_counter = 0
 point_counter = 0
+level = 1
+o_counter = 150
+random_speed = 5
 
 
 
@@ -132,11 +136,47 @@ while run:
             
         dino.jump()
 
+        ###########Level Creator############
+        if point == 100:
+            level = 2
+            loop_counter = 0
+            o_counter = 120
+        if point == 200:
+            Level = 3
+            loop_counter = 0
+            o_counter = 80
+        if point == 300:
+            level = 4
+            loop_counter = 0
+            o_counter = 50
+        if point == 400:
+            level = 5
+            loop_counter = 0
+            o_counter = 20
+            
+
+        if level == 2:
+            random_speed = random.randint(6, 12)
+            dino.speed = 7
+        elif level == 3:
+            random_speed = random.randint(8, 18)
+            dino.speed = 9
+        elif level == 4:
+            random_speed = random.randint(14, 24)
+            dino.speed = 12
+        elif level == 5:
+            random_speed = random.randint(20, 30)
+            dino.speed = 15
+
 
         
-        if loop_counter == 100:
-            obstacles.append(Obstacle(1200, 500, 50, 120, 5, RED))
+        if loop_counter == o_counter:
+            obstacles.append(Obstacle(1200, 500, 50, 120, random_speed, RED))
+            print(random_speed)
             loop_counter = 0
+
+        # for i in range(1, (level*2)):
+        #     obstacles.append(Obstacle(1200, 500, 50, 120, 5, RED))
             
         
         value = collide(dino, obstacles)
