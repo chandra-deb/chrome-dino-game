@@ -109,6 +109,9 @@ while run:
                 point_counter = 0
                 point = 0
                 obstacles = []
+                level = 1
+                o_counter = 150
+                random_speed = 5
 
         pygame.display.update()
 
@@ -133,40 +136,77 @@ while run:
             dino.x_pos += dino.speed
         if keys[pygame.K_SPACE]:
             dino.is_jump = True
-            
+
         dino.jump()
 
         ###########Level Creator############
+
         if point == 100:
             level = 2
             loop_counter = 0
-            o_counter = 120
-        if point == 200:
+            o_counter = 100
+        if point == 300:
             Level = 3
             loop_counter = 0
-            o_counter = 80
-        if point == 300:
+            o_counter = 70
+        if point == 500:
             level = 4
             loop_counter = 0
             o_counter = 50
-        if point == 400:
+        if point == 700:
             level = 5
             loop_counter = 0
+            o_counter = 40
+        if point == 850:
+            level = 6
+            loop_counter = 0
+            o_counter = 35
+        if point == 950:
+            level = 7
+            loop_counter = 0
+            o_counter = 30
+        if point == 1200:
+            level = 8
+            loop_counter = 0
+            o_counter = 25
+        if point == 1350:
+            level = 9
+            loop_counter = 0
             o_counter = 20
+        if point == 1500:
+            level = 10
+            loop_counter = 0
+            o_counter = 15
             
 
-        if level == 2:
+        elif level == 2:
             random_speed = random.randint(6, 12)
-            dino.speed = 7
+            dino.speed = 6
         elif level == 3:
-            random_speed = random.randint(8, 18)
-            dino.speed = 9
+            random_speed = random.randint(7, 14)
+            dino.speed = 8
         elif level == 4:
-            random_speed = random.randint(14, 24)
-            dino.speed = 12
+            random_speed = random.randint(8, 16)
+            dino.speed = 10
         elif level == 5:
-            random_speed = random.randint(20, 30)
-            dino.speed = 15
+            random_speed = random.randint(9, 18)
+            dino.speed = 12
+        elif level == 6:
+            random_speed = random.randint(10, 20)
+            dino.speed = 14
+        elif level == 7:
+            random_speed = random.randint(11, 22)
+            dino.speed = 16
+        elif level == 8:
+            random_speed = random.randint(12, 24)
+            dino.speed = 17
+        elif level == 9:
+            random_speed = random.randint(13, 26)
+            dino.speed = 18
+        elif level == 10:
+            random_speed = random.randint(15, 30)
+            dino.speed = 20
+        
 
 
         
@@ -175,9 +215,6 @@ while run:
             print(random_speed)
             loop_counter = 0
 
-        # for i in range(1, (level*2)):
-        #     obstacles.append(Obstacle(1200, 500, 50, 120, 5, RED))
-            
         
         value = collide(dino, obstacles)
         if value:
