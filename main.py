@@ -19,20 +19,32 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 
 text = font.render(str(point), True, GREEN, WHITE)
 textRect = text.get_rect()  
-textRect.center = (850, 100) 
+textRect.center = (900, 100) 
 
 score_text = font.render(" ", True, GREEN, WHITE)
 score_text_rect = text.get_rect()  
-score_text_rect.center = (850, 150) 
+score_text_rect.center = (900, 150) 
 
 ot_score_text = font.render(" ", True, GREEN, WHITE)
 ot_score_text_rect = text.get_rect()  
-ot_score_text_rect.center = (500, 400) 
+ot_score_text_rect.center = (500, 300) 
 
 show_high_score = font.render(" ", True, GREEN, WHITE)
 show_high_score_rect = text.get_rect()  
-show_high_score_rect.center = (850, 50)
+show_high_score_rect.center = (900, 50)
 
+cong_high_score = font.render(" ", True, GREEN, WHITE)
+cong_high_score_rect = text.get_rect()  
+cong_high_score_rect.center = (200, 400)
+
+
+intro_font = pygame.font.Font('freesansbold.ttf', 64) 
+intro_text = intro_font.render(" ", True, GREEN, WHITE)
+intro_text_rect = text.get_rect()  
+intro_text_rect.center = (500, 280)
+
+
+#################try to find data file for high score##if unable to find it will create one
 try:
     with open('high_score.txt', 'r') as txt_file:
         high_score = txt_file.read()
@@ -108,6 +120,7 @@ o_counter = 150
 random_speed = 5
 
 
+intro = True
 
 
 game_over = False
@@ -120,25 +133,28 @@ while run:
     if game_over:
         window.fill(WHITE)
         window.blit(text, textRect)  
-        textRect.center = (350, 300)
+        textRect.center = (300, 200)
 
         text = font.render(":(Game Over :- press Tab to play again", True, RED, WHITE)
         ot_score_text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
-        window.blit(ot_score_text, ot_score_text_rect)
 
         with open('high_score.txt', 'r') as txt_file:
             high_score = txt_file.read()
 
 
         if int(point) > int(high_score):
+            cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
             with open('high_score.txt', 'w') as txt_file:
                 txt_file.write(str(point))
+        
+        window.blit(cong_high_score, cong_high_score_rect)
+        window.blit(ot_score_text, ot_score_text_rect)
 
         
         
 
                 
-        window.blit(ot_score_text, ot_score_text_rect)
+        # window.blit(ot_score_text, ot_score_text_rect)
 
         ks = pygame.key.get_pressed()
         if ks[pygame.K_TAB]:
@@ -265,9 +281,10 @@ while run:
         show_high_score = font.render("HIGH SCORE: " + str(high_score), True, GREEN, WHITE)
 
         window.fill(WHITE)
-        window.blit(text, textRect)
-        window.blit(score_text, score_text_rect)
         window.blit(show_high_score, show_high_score_rect) 
+        window.blit(score_text, score_text_rect)
+        window.blit(text, textRect)
+        
         
 
 
