@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+import time
 
 pygame.init()
 
@@ -33,6 +34,7 @@ show_high_score = font.render(" ", True, GREEN, WHITE)
 show_high_score_rect = text.get_rect()  
 show_high_score_rect.center = (900, 50)
 
+cong_high_score_font = pygame.font.Font('freesansbold.ttf', 48)
 cong_high_score = font.render(" ", True, GREEN, WHITE)
 cong_high_score_rect = text.get_rect()  
 cong_high_score_rect.center = (200, 400)
@@ -150,10 +152,12 @@ while intro:
                     run = False
                     intro = False
 
+
             if game_over:
                 window.fill(WHITE)
                 window.blit(text, textRect)  
                 textRect.center = (300, 200)
+                
 
                 text = font.render(":(Game Over :- press Tab to play again", True, RED, WHITE)
                 ot_score_text = font.render("SCORE: " + str(point), True, GREEN, WHITE)
@@ -164,14 +168,16 @@ while intro:
 
                 if int(point) > int(high_score):
                     made_high_score = True
-                    # cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
+                    # cong_high_score = cong_high_score_font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
                     # window.blit(cong_high_score, cong_high_score_rect)
                     with open('high_score.txt', 'w') as txt_file:
                         txt_file.write(str(point))
                 
-                # if made_high_score:
-                #     cong_high_score = font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
-                #     window.blit(cong_high_score, cong_high_score_rect)                   
+                if made_high_score:
+                    cong_high_score = cong_high_score_font.render(":)Congratulations! You are now the highest scorer.", True, GREEN, WHITE)
+                    window.blit(cong_high_score, cong_high_score_rect)
+
+
                 
                 window.blit(ot_score_text, ot_score_text_rect)
 
